@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Dashboard\PostController;
 use App\Http\Controllers\PrimerController;
 use Illuminate\Support\Facades\Route;
 
@@ -12,3 +13,5 @@ Route::get('otro/{post}/{otro}', [PrimerController::class, 'otro']);
 
 // Route::resource('post', PrimerController::class);
 // Route::resource('category', PrimerController::class)->only('index','show','store');
+
+Route::resource('post', PostController::class);
