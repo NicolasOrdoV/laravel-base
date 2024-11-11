@@ -9,9 +9,6 @@
 </head>
 
 <body>
-    <header>
-        header
-    </header>
     @yield('contact')
     <section>
         @yield('morecontact')

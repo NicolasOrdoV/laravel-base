@@ -3,22 +3,20 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Post\PutRequest;
-use App\Http\Requests\Post\StoreRequest;
+use App\Http\Requests\Category\PutRequest;
+use App\Http\Requests\Category\StoreRequest;
 use App\Models\Category;
-use App\Models\Post;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class PostController extends Controller
+class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $posts = Post::paginate(2);
-        return view('dashboard.post.index', compact('posts'));
+        $categories = Category::paginate(2);
+        return view('dashboard.category.index', compact('categories'));
         //dd($post->category->title);
         // $post->update(
         //     [
@@ -39,9 +37,8 @@ class PostController extends Controller
      */
     public function create()
     {
-        $categories = Category::pluck('id', 'title');
-        $post = new Post();
-        return view('dashboard.post.create', compact('categories', 'post'));
+        $category = new Category();
+        return view('dashboard.category.create', compact('category'));
     }
 
     /**
@@ -67,57 +64,47 @@ class PostController extends Controller
         // ]);
 
         // Post::create($request->all()); otra forma de insertar
-        Post::create(
+        Category::create(
             [
                 'title' => $request->title,
-                'slug' => $request->slug,
-                'content' => $request->content,
-                'category_id' => $request->category_id,
-                'description' => $request->description,
-                'posted' => $request->posted,
-                'image' => $request->image
+                'slug' => $request->slug
             ]
         );
-        return to_route('post.index');
+        return to_route('category.index');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Post $post)
+    public function show(Category $category)
     {
-        return view('dashboard.post.show', compact('post'));
+        return view('dashboard.category.show', compact('category'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Post $post)
+    public function edit(Category $category)
     {
-        $categories = Category::pluck('id', 'title');
-        return view('dashboard.post.edit', compact('categories', 'post'));
+        return view('dashboard.category.edit', compact('category'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(PutRequest $request, Post $post)
+    public function update(PutRequest $request, Category $category)
     {
         $data = $request->validated();
-        if (isset($data['image'])) {
-            $data['image'] = $filename = time() . "." . $data['image']->extension();
-            $request->image->move(public_path('upload/post'), $filename);
-        }
-        $post->update($data);
-        return to_route('post.index');
+        $category->update($data);
+        return to_route('category.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Post $post)
+    public function destroy(Category $category)
     {
-        $post->delete();
-        return to_route('post.index');
+        $category->delete();
+        return to_route('category.index');
     }
 }
