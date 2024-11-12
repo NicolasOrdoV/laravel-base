@@ -105,6 +105,6 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         $category->delete();
-        return to_route('category.index')->with('status', 'Categoria eliminada');
+        return to_route('category.index')->with('status', 'Category delete');
     }
 }
