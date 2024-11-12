@@ -17,6 +17,9 @@ class PostController extends Controller
      */
     public function index()
     {
+        //session()->flush();
+        //session()->fotget('key');
+        //session(['key'=> 'value']);
         $posts = Post::paginate(2);
         return view('dashboard.post.index', compact('posts'));
         //dd($post->category->title);
@@ -78,7 +81,7 @@ class PostController extends Controller
                 'image' => $request->image
             ]
         );
-        return to_route('post.index');
+        return to_route('post.index')->with('status','Post creada');
     }
 
     /**
@@ -109,7 +112,7 @@ class PostController extends Controller
             $request->image->move(public_path('upload/post'), $filename);
         }
         $post->update($data);
-        return to_route('post.index');
+        return to_route('post.index')->with('status','Post actualizada');
     }
 
     /**
@@ -118,6 +121,6 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         $post->delete();
-        return to_route('post.index');
+        return to_route('post.index')->with('status','Post eliminada');
     }
 }

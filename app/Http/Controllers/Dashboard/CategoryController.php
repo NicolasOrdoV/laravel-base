@@ -70,7 +70,7 @@ class CategoryController extends Controller
                 'slug' => $request->slug
             ]
         );
-        return to_route('category.index');
+        return to_route('category.index')->with('status', 'Categoria creada');
     }
 
     /**
@@ -96,7 +96,7 @@ class CategoryController extends Controller
     {
         $data = $request->validated();
         $category->update($data);
-        return to_route('category.index');
+        return to_route('category.index')->with('status', 'Categoria actualizada');
     }
 
     /**
@@ -105,6 +105,6 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         $category->delete();
-        return to_route('category.index');
+        return to_route('category.index')->with('status', 'Categoria eliminada');
     }
 }
