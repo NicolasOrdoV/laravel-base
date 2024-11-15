@@ -1,8 +1,8 @@
 @extends('dashboard.layout')
 
 @section('contact')
-    <a href="{{ route('post.create') }}"> Crear + </a>
-    <table>
+    <a href="{{ route('post.create') }}" class="btn btn-success my-3"> Crear + </a>
+    <table class="table">
         <thead>
             <tr>
                 <th>Id</th>
@@ -20,12 +20,12 @@
                     <td>{{ $p->posted }}</td>
                     <td>{{ $p->category->title }}</td>
                     <td>
-                        <a href="{{ route('post.edit', $p->id) }}"> Editar </a>
-                        <a href="{{ route('post.show', $p->id) }}"> Show </a>
+                        <a href="{{ route('post.edit', $p->id) }}" class="btn btn-warning mt-2"> Editar </a>
+                        <a href="{{ route('post.show', $p->id) }}" class="btn btn-primary mt-2"> Show </a>
                         <form method="post" action="{{route('post.destroy', $p->id)}}">
                             @method('delete')
                             @csrf
-                            <button type="submit">Eliminar</button>
+                            <button type="submit" class="btn btn-danger mt-2">Eliminar</button>
                         </form>
 
                     </td>
@@ -33,5 +33,7 @@
             @endforeach
         </tbody>
     </table>
-    {{ $posts->links() }}
+    <div class="mt-2">
+        {{ $posts->links() }}
+    </div>
 @endsection

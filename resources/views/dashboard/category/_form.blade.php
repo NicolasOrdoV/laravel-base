@@ -1,6 +1,6 @@
 @csrf
 <label for="">Title</label>
-<input name="title" type="text" value="{{ old('title', $category->title) }}"><br>
+<input class="form-control" name="title" type="text" value="{{ old('title', $category->title) }}"><br>
 <label for="">Slug</label>
-<input name="slug" type="text" value="{{ old('slug', $category->slug) }}"><br>
-<button type="submit">Enviar</button>
+<input class="form-control" name="slug" type="text" value="{{ old('slug', $category->slug) }}"><br>
+<button type="submit" class="btn btn-success mt-2">Enviar</button>
