@@ -3,6 +3,7 @@
 use App\Http\Controllers\blog\BlogController;
 use App\Http\Controllers\Dashboard\CategoryController;
 use App\Http\Controllers\Dashboard\PostController;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\UserAccessDashboardMiddleware;
@@ -15,6 +16,7 @@ Route::get('/vue/{n1?}/{n2?}/{n3?}', function () {
     return view('vue');
 });
 
+Route::post('user/login',[LoginController::class, 'authenticate']);
 
 // Route::get('/vue/save', function () {
 //     return view('save');
