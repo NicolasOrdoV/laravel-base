@@ -8,6 +8,7 @@ use App\Http\Requests\Post\StoreRequest;
 use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
@@ -111,6 +112,7 @@ class PostController extends Controller
             $data['image'] = $filename = time() . "." . $data['image']->extension();
             $request->image->move(public_path('upload/post'), $filename);
         }
+        Cache::forget('post_show_'.$post->id);
         $post->update($data);
         return to_route('post.index')->with('status','Post actualizada');
     }

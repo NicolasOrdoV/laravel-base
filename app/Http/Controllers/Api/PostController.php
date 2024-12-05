@@ -7,6 +7,7 @@ use App\Http\Requests\Post\PutRequest;
 use App\Http\Requests\Post\StoreRequest;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
@@ -62,7 +63,19 @@ class PostController extends Controller
 
     public function all()
     {
-        return response()->json(Post::get());
+        // if(cache()->has('post_index')) {
+        //     return response()->json(cache()->get('post-index'));
+
+        // } else {
+        //     $posts = Post::get();
+        //     cache()->put('post-index', $posts);
+        //     return response()->json($posts);
+        // }
+
+        return response()->json(Cache::remember('post_index', now()->addMinutes(10), function () {
+            return Post::all();
+        }));
+        //return response()->json(Post::get());
     }
 
     public function upload(Request $request, Post $post)
