@@ -7,8 +7,10 @@ use App\Http\Requests\Post\PutRequest;
 use App\Http\Requests\Post\StoreRequest;
 use App\Models\Category;
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
@@ -21,7 +23,7 @@ class PostController extends Controller
         //session()->flush();
         //session()->fotget('key');
         //session(['key'=> 'value']);
-        $posts = Post::paginate(2);
+        $posts = Post::paginate(10);
         return view('dashboard.post.index', compact('posts'));
         //dd($post->category->title);
         // $post->update(
@@ -71,18 +73,21 @@ class PostController extends Controller
         // ]);
 
         // Post::create($request->all()); otra forma de insertar
-        Post::create(
-            [
-                'title' => $request->title,
-                'slug' => $request->slug,
-                'content' => $request->content,
-                'category_id' => $request->category_id,
-                'description' => $request->description,
-                'posted' => $request->posted,
-                'image' => $request->image
-            ]
-        );
-        return to_route('post.index')->with('status','Post creada');
+        // Post::create(
+        //     [
+        //         'title' => $request->title,
+        //         'slug' => $request->slug,
+        //         'content' => $request->content,
+        //         'category_id' => $request->category_id,
+        //         'description' => $request->description,
+        //         'posted' => $request->posted,
+        //         'image' => $request->image
+        //     ]
+        // );
+
+        $post = new Post($request->validated());
+        auth()->user()->post()->save($post);
+        return to_route('post.index')->with('status', 'Post creada');
     }
 
     /**
@@ -98,6 +103,18 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
+        // Gate::check('create', $post);
+        // Gate::any(['create', 'update'], $post);
+        // Gate::none(['create', 'update'], $post);
+        // auth()->user()->can('create', $post);
+        // auth()->user()->cannot('create', $post);
+        // Gate::allowIf(fn(User $user) => $user->id > 0);
+        // Gate::denyIf(fn(User $user) => $user->id > 0);
+
+        Gate::authorize('update', $post);
+        // if (!Gate::inspect('update', $post)->allowed()) {
+        //     return abort(403, "No entraste");
+        // }
         $categories = Category::pluck('id', 'title');
         return view('dashboard.post.edit', compact('categories', 'post'));
     }
@@ -112,9 +129,9 @@ class PostController extends Controller
             $data['image'] = $filename = time() . "." . $data['image']->extension();
             $request->image->move(public_path('upload/post'), $filename);
         }
-        Cache::forget('post_show_'.$post->id);
+        Cache::forget('post_show_' . $post->id);
         $post->update($data);
-        return to_route('post.index')->with('status','Post actualizada');
+        return to_route('post.index')->with('status', 'Post actualizada');
     }
 
     /**
@@ -123,6 +140,6 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         $post->delete();
-        return to_route('post.index')->with('status','Post eliminada');
+        return to_route('post.index')->with('status', 'Post eliminada');
     }
 }

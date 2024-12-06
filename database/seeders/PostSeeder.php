@@ -29,7 +29,8 @@ class PostSeeder extends Seeder
                 'content' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur a felis nec justo tristique commodo. Maecenas ut risus nec dui sollicitudin dictum vel nec arcu. Curabitur vitae urna vel lectus sodales elementum pharetra vitae elit. Quisque vitae mollis odio, ut mollis odio. Proin laoreet, dolor sit amet sodales malesuada',
                 'description' => 'Nunc viverra in mi ut hendrerit. Nam metus libero, varius eget metus eget, auctor porttitor nisl. Sed hendrerit, dolor vehicula mattis dictum, ex erat ultricies justo',
                 'posted' => 'yes',
-                'category_id' => $c->id
+                'category_id' => $c->id,
+                'user_id' => 1
             ]);
         }
     }
