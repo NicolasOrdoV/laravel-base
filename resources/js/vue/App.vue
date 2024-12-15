@@ -66,9 +66,20 @@ export default {
         } else {
             const auth = this.$cookies.get('auth')
             if (auth) {
+
                 this.isLoggedIn = true
                 this.user = auth.user
                 this.token = auth.token
+                this.$axios.post(this.$root.urls.tokenCheck, {
+                    token: auth.token
+                }).then(() => {
+                    // this.isLoggedIn = true
+                    // this.user = auth.user
+                    // this.token = auth.token
+                }).catch(() => {
+                    this.setCookieAuth('')
+                    window.location.href = '/vue/login'
+                })
             }
         }
         // const config = {
@@ -113,7 +124,8 @@ export default {
                 postPatch: '/api/post/',
                 postPost: '/api/post/',
                 getPostBySlug: '/api/post/slug/',
-                getCategoryAll: '/api/category/all'
+                getCategoryAll: '/api/category/all',
+                tokenCheck: '/api/token-check'
             }
         }
     }

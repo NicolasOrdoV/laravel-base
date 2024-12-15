@@ -1,7 +1,10 @@
 @extends('dashboard.layout')
 
 @section('contact')
-    <a href="{{ route('post.create') }}" class="btn btn-success my-3"> Crear + </a>
+    @can('editor.post.create')
+        <a href="{{ route('post.create') }}" class="btn btn-success my-3"> Crear + </a>
+    @endcan
+
     <table class="table">
         <thead>
             <tr>
@@ -20,13 +23,17 @@
                     <td>{{ $p->posted }}</td>
                     <td>{{ $p->category->title }}</td>
                     <td>
-                        <a href="{{ route('post.edit', $p->id) }}" class="btn btn-warning mt-2"> Editar </a>
+                        @can('editor.post.update')
+                            <a href="{{ route('post.edit', $p->id) }}" class="btn btn-warning mt-2"> Editar </a>
+                        @endcan
                         <a href="{{ route('post.show', $p->id) }}" class="btn btn-primary mt-2"> Show </a>
-                        <form method="post" action="{{route('post.destroy', $p->id)}}">
-                            @method('delete')
-                            @csrf
-                            <button type="submit" class="btn btn-danger mt-2">Eliminar</button>
-                        </form>
+                        @can('editor.post.delete')
+                            <form method="post" action="{{ route('post.destroy', $p->id) }}">
+                                @method('delete')
+                                @csrf
+                                <button type="submit" class="btn btn-danger mt-2">Eliminar</button>
+                            </form>
+                        @endcan
 
                     </td>
                 </tr>

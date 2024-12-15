@@ -18,7 +18,7 @@ class PostPolicy
 
     // public function before(User $user) : bool|null
     // {
-    //     if($user->isAdmin()) {
+    //     if($user->accessDashboard()) {
     //         return null;
     //     }
     //     return false;

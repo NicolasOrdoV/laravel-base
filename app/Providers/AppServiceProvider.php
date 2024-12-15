@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
@@ -23,5 +24,12 @@ class AppServiceProvider extends ServiceProvider
         // Gate::define('update-post', function( $user, $post) {
         //     return $user->id === $post->user_id;
         // });
+        Gate::define('update-view-user-admin', function( $user, $userParams, $permissionName) {
+            return ($user->hasRole('Admin') || !$userParams->hasRole('Admin')) && Auth::user()->hasPermissionTo($permissionName);
+        });
+        Gate::define('is-admin', function( $user) {
+            return $user->hasRole('Admin');
+        });
+
     }
 }

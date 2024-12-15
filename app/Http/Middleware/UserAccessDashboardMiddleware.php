@@ -16,10 +16,15 @@ class UserAccessDashboardMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+        return $next($request);
 
-        if(Auth::user()->isAdmin()) {
+        // if(Auth::user()->isAdmin()) {
+        //     return $next($request);
+        // }
+
+        if(Auth::user()->accessDashboard()) {
             return $next($request);
         }
-        return redirect('/');
+        // return redirect('/');
     }
 }

@@ -1,7 +1,9 @@
 @extends('dashboard.layout')
 
 @section('contact')
-    <a href="{{ route('category.create') }}" class="btn btn-success mt-3"> Crear + </a>
+    @can('editor.category.create')
+        <a href="{{ route('category.create') }}" class="btn btn-success mt-3"> Crear + </a>
+    @endcan
     <table class="table">
         <thead>
             <tr>
@@ -15,13 +17,17 @@
                     <td>{{ $c->id }}</td>
                     <td>{{ $c->title }}</td>
                     <td>
-                        <a href="{{ route('category.edit', $c->id) }}" class="btn btn-warning mt-2"> Editar </a>
+                        @can('editor.category.update')
+                            <a href="{{ route('category.edit', $c->id) }}" class="btn btn-warning mt-2"> Editar </a>
+                        @endcan
                         <a href="{{ route('category.show', $c->id) }}" class="btn btn-primary mt-2"> Show </a>
-                        <form method="post" action="{{route('category.destroy', $c->id)}}">
-                            @method('delete')
-                            @csrf
-                            <button type="submit" class="btn btn-danger mt-2">Eliminar</button>
-                        </form>
+                        @can('editor.category.delete')
+                            <form method="post" action="{{ route('category.destroy', $c->id) }}">
+                                @method('delete')
+                                @csrf
+                                <button type="submit" class="btn btn-danger mt-2">Eliminar</button>
+                            </form>
+                        @endcan
 
                     </td>
                 </tr>
@@ -31,5 +37,4 @@
     <div class="mt-2">
         {{ $categories->links() }}
     </div>
-
 @endsection

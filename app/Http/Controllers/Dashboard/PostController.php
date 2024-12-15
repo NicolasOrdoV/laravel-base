@@ -7,8 +7,7 @@ use App\Http\Requests\Post\PutRequest;
 use App\Http\Requests\Post\StoreRequest;
 use App\Models\Category;
 use App\Models\Post;
-use App\Models\User;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
@@ -20,6 +19,9 @@ class PostController extends Controller
      */
     public function index()
     {
+        if(!Auth::user()->hasPermissionTo('editor.post.index')) {
+            return abort(403);
+        }
         //session()->flush();
         //session()->fotget('key');
         //session(['key'=> 'value']);
@@ -45,6 +47,9 @@ class PostController extends Controller
      */
     public function create()
     {
+        if(!Auth::user()->hasPermissionTo('editor.post.create')) {
+            return abort(403);
+        }
         $categories = Category::pluck('id', 'title');
         $post = new Post();
         return view('dashboard.post.create', compact('categories', 'post'));
@@ -55,6 +60,9 @@ class PostController extends Controller
      */
     public function store(StoreRequest $request)
     {
+        if(!Auth::user()->hasPermissionTo('editor.post.store')) {
+            return abort(403);
+        }
         $validated = Validator::make($request->all(), [
             'title' => 'required|min:5|min:500',
             'slug' => 'required|min:5|min:500',
@@ -86,7 +94,7 @@ class PostController extends Controller
         // );
 
         $post = new Post($request->validated());
-        auth()->user()->post()->save($post);
+        Auth->user()->post()->save($post);
         return to_route('post.index')->with('status', 'Post creada');
     }
 
@@ -95,6 +103,9 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
+        if(!Auth::user()->hasPermissionTo('editor.post.show')) {
+            return abort(403);
+        }
         return view('dashboard.post.show', compact('post'));
     }
 
@@ -103,15 +114,18 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
+        if(!Auth::user()->hasPermissionTo('editor.post.update')) {
+            return abort(403);
+        }
         // Gate::check('create', $post);
         // Gate::any(['create', 'update'], $post);
         // Gate::none(['create', 'update'], $post);
-        // auth()->user()->can('create', $post);
-        // auth()->user()->cannot('create', $post);
+        // Auth->user()->can('create', $post);
+        // Auth->user()->cannot('create', $post);
         // Gate::allowIf(fn(User $user) => $user->id > 0);
         // Gate::denyIf(fn(User $user) => $user->id > 0);
 
-        Gate::authorize('update', $post);
+       // Gate::authorize('update', $post);
         // if (!Gate::inspect('update', $post)->allowed()) {
         //     return abort(403, "No entraste");
         // }
@@ -124,12 +138,15 @@ class PostController extends Controller
      */
     public function update(PutRequest $request, Post $post)
     {
+        if(!Auth::user()->hasPermissionTo('editor.post.update')) {
+            return abort(403);
+        }
         $data = $request->validated();
         if (isset($data['image'])) {
             $data['image'] = $filename = time() . "." . $data['image']->extension();
             $request->image->move(public_path('upload/post'), $filename);
         }
-        Cache::forget('post_show_' . $post->id);
+        //Cache::forget('post_show_' . $post->id);
         $post->update($data);
         return to_route('post.index')->with('status', 'Post actualizada');
     }
@@ -139,6 +156,9 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+        if(!Auth::user()->hasPermissionTo('editor.post.delete')) {
+            return abort(403);
+        }
         $post->delete();
         return to_route('post.index')->with('status', 'Post eliminada');
     }

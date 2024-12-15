@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class UserController extends Controller
 {
@@ -48,5 +50,26 @@ class UserController extends Controller
         }
         session()->flush();
         return response()->json('ok');
+    }
+
+    public function checkToken()
+    {
+        try {
+            [$id, $token] = explode('|', request('token'));
+            $tokenHash = hash('sha256', $token);
+            $tokenModel = PersonalAccessToken::where('token', $tokenHash)->first();
+            if($tokenModel) {
+                //Auth::login($tokenModel->tojenable);
+                return response()->json([
+                    'isLoggedIn' => true,
+                    'token' => $token,
+                    'user' => auth()->user()
+                ]);
+            }
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+
+        return response()->json('invalid user', 422);
     }
 }

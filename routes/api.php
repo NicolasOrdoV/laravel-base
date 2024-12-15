@@ -27,4 +27,5 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 });
 
 Route::post('post/upload/{post}',[PostController::class, 'upload']);
+Route::post('user/token-check',[UserController::class, 'checkToken']);
 Route::post('user/logout',[UserController::class, 'logout']);
