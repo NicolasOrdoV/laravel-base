@@ -41,6 +41,9 @@
                         <x-nav-link :href="route('user.index')" :active="request()->routeIs('user.index', 'user.create', 'user.edit')">
                             {{ __('Usuarios') }}
                         </x-nav-link>
+                        <x-nav-link :href="route('tag.index')" :active="request()->routeIs('tag.index', 'tag.create', 'tag.edit')">
+                            {{ __('Tags') }}
+                        </x-nav-link>
                     @endcan
                 </div>
             </div>
@@ -128,6 +131,9 @@
                     {{ __('Usuarios') }}
                 </x-responsive-nav-link>
             @endcan
+            <x-responsive-nav-link :href="route('tag.index')" :active="request()->routeIs('tag.index', 'tag.create', 'tag.edit')">
+                {{ __('Tags') }}
+            </x-responsive-nav-link>
         </div>
 
         <!-- Responsive Settings Options -->
