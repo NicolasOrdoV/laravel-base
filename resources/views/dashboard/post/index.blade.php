@@ -4,7 +4,7 @@
     @can('editor.post.create')
         <a href="{{ route('post.create') }}" class="btn btn-success my-3"> Crear + </a>
     @endcan
-
+    {{ __('message.welcome', ['name' => 'juan']) }}
     <table class="table">
         <thead>
             <tr>

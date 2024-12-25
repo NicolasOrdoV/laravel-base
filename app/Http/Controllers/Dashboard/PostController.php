@@ -20,13 +20,19 @@ class PostController extends Controller
      */
     public function index()
     {
-        if(!Auth::user()->hasPermissionTo('editor.post.index')) {
+        //*lang*//
+        //echo __('message.welcome');
+        if (!Auth::user()->hasPermissionTo('editor.post.index')) {
             return abort(403);
         }
         //session()->flush();
         //session()->fotget('key');
         //session(['key'=> 'value']);
-        $posts = Post::paginate(10);
+        //$posts = Post::with('category:id,title')->paginate(10);
+        $posts = Post::with(['category' => function($query) {
+            $query->select('id', 'title');
+        }])->paginate(10);
+        //$posts = Post::paginate(10);
         return view('dashboard.post.index', compact('posts'));
         //dd($post->category->title);
         // $post->update(
@@ -48,11 +54,11 @@ class PostController extends Controller
      */
     public function create()
     {
-        if(!Auth::user()->hasPermissionTo('editor.post.create')) {
+        if (!Auth::user()->hasPermissionTo('editor.post.create')) {
             return abort(403);
         }
         $categories = Category::pluck('id', 'title');
-        $tags = Tag::pluck('id','name');
+        $tags = Tag::pluck('id', 'name');
         $post = new Post();
         return view('dashboard.post.create', compact('categories', 'post', 'tags'));
     }
@@ -62,7 +68,7 @@ class PostController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        if(!Auth::user()->hasPermissionTo('editor.post.store')) {
+        if (!Auth::user()->hasPermissionTo('editor.post.store')) {
             return abort(403);
         }
         $validated = Validator::make($request->all(), [
@@ -106,7 +112,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        if(!Auth::user()->hasPermissionTo('editor.post.show')) {
+        if (!Auth::user()->hasPermissionTo('editor.post.show')) {
             return abort(403);
         }
         return view('dashboard.post.show', compact('post'));
@@ -117,7 +123,7 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        if(!Auth::user()->hasPermissionTo('editor.post.update')) {
+        if (!Auth::user()->hasPermissionTo('editor.post.update')) {
             return abort(403);
         }
         // Gate::check('create', $post);
@@ -128,12 +134,12 @@ class PostController extends Controller
         // Gate::allowIf(fn(User $user) => $user->id > 0);
         // Gate::denyIf(fn(User $user) => $user->id > 0);
 
-       // Gate::authorize('update', $post);
+        // Gate::authorize('update', $post);
         // if (!Gate::inspect('update', $post)->allowed()) {
         //     return abort(403, "No entraste");
         // }
         $categories = Category::pluck('id', 'title');
-        $tags = Tag::pluck('id','name');
+        $tags = Tag::pluck('id', 'name');
         return view('dashboard.post.edit', compact('categories', 'post', 'tags'));
     }
 
@@ -142,7 +148,7 @@ class PostController extends Controller
      */
     public function update(PutRequest $request, Post $post)
     {
-        if(!Auth::user()->hasPermissionTo('editor.post.update')) {
+        if (!Auth::user()->hasPermissionTo('editor.post.update')) {
             return abort(403);
         }
         $data = $request->validated();
@@ -161,7 +167,7 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        if(!Auth::user()->hasPermissionTo('editor.post.delete')) {
+        if (!Auth::user()->hasPermissionTo('editor.post.delete')) {
             return abort(403);
         }
         $post->delete();

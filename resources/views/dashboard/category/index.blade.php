@@ -9,6 +9,7 @@
             <tr>
                 <th>Id</th>
                 <th>Title</th>
+                <th>Post</th>
             </tr>
         </thead>
         <tbody>
@@ -16,6 +17,7 @@
                 <tr>
                     <td>{{ $c->id }}</td>
                     <td>{{ $c->title }}</td>
+                    <td>{{ $c->post }}</td>
                     <td>
                         @can('editor.category.update')
                             <a href="{{ route('category.edit', $c->id) }}" class="btn btn-warning mt-2"> Editar </a>
